@@ -4,9 +4,10 @@ public class Queue<T> {
 	
 	private QueueNode<T> front;
 	private QueueNode<T> back;
+	private int size;
 	
 	public Queue() {
-	
+		size = 0;
 	}
 	
 	public void enqueue(QueueNode<T> newNode) {
@@ -25,13 +26,23 @@ public class Queue<T> {
 			
 			front.setPrevious(back);
 		}
+		
+		++size;
+	}
+	
+	public void enqueue(T newNodeValue) {
+		QueueNode<T> newNode = new QueueNode<>(newNodeValue);
+		enqueue(newNode);
 	}
 	
 	public QueueNode<T> dequeue() {
 		QueueNode<T> node = front;
 		
 		if(front == null) {
-			//Lanzar excepción
+			return null;
+		} else if(front == back) {
+			front = null;
+			back = null;
 		} else {
 			back.setNext(front.getNext());
 			front.getNext().setPrevious(back);
@@ -39,15 +50,25 @@ public class Queue<T> {
 			front = front.getNext();
 		}
 		
+		--size;
+		
 		return node;
 	}
 	
 	public QueueNode<T> front() {
 		if(front == null) {
-			//Lanzar excepción
+			return null;
 		}
 
 		return front;
+	}
+	
+	public QueueNode<T> back() {
+		if(front == null) {
+			return null;
+		}
+
+		return back;
 	}
 	
 	public boolean isEmpty() {
@@ -58,4 +79,25 @@ public class Queue<T> {
 		}
 	}
 	
+	public boolean contains(T elementSearched) {
+		if(front == null) {
+			return false;
+		}
+		
+		QueueNode<T> current = front;
+		
+		for (int i = 0; i < size; i++) {
+			if(current.getValue().equals(elementSearched)) {
+				return true;
+			} else if(current.getValue().equals(back.getValue())) {
+				return false;
+			}
+		}
+		
+		return false;
+	}
+
+	public int size() {
+		return size;
+	}
 }
