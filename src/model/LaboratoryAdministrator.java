@@ -1,11 +1,24 @@
 package model;
 
-import java.util.*;
+import dataStructures.Hashtable;
+import dataStructures.PriorityQueue;
+import dataStructures.Queue;
 
 public class LaboratoryAdministrator {
 
-	Collection<Patient> patients;
-	Collection<Patient> generalProrityPatients;
+	Hashtable<Integer,Patient> patients;
+	PriorityQueue<Integer,Patient> generalProrityPatients;
+	Queue<Patient> generalNonPriorityPatients;
+	PriorityQueue<Integer, Patient> hematologyPriorityPatients;
+	Queue<Patient> hematologyNonPriorityPatients;
+
+	public LaboratoryAdministrator() {
+		this.patients = new Hashtable<>();
+		this.generalProrityPatients = new PriorityQueue<>();
+		this.generalNonPriorityPatients = new Queue<>();
+		this.hematologyPriorityPatients = new PriorityQueue<>();
+		this.hematologyNonPriorityPatients = new Queue<>();
+	}
 
 	/**
 	 * 
@@ -17,9 +30,18 @@ public class LaboratoryAdministrator {
 	 * @param address
 	 * @param unit
 	 */
-	public boolean addPatient(String name, boolean priority, String id, String age, String celNumber, String address, boolean unit) {
-		// TODO - implement LaboratoryAdministrator.addPatient
-		throw new UnsupportedOperationException();
+	public boolean addPatient(String name, boolean priority, String id, String age, 
+			String celNumber, String address, boolean unit, int priorityValue) {
+		if(searchPatient(id) != null) {
+			return false;
+		}
+		
+		Patient newPatient = new Patient(name, priority, id, age, celNumber, address, 
+				unit, priorityValue);
+		
+		patients.insert(patients.size()+1, newPatient);
+		
+		return true;
 	}
 
 	/**
@@ -27,8 +49,13 @@ public class LaboratoryAdministrator {
 	 * @param id
 	 */
 	public Patient searchPatient(String id) {
-		// TODO - implement LaboratoryAdministrator.searchPatient
-		throw new UnsupportedOperationException();
+		for (int i = 0; i < patients.size(); i++) {
+			if(patients.get(i).getValue().getId().equalsIgnoreCase(id)) {
+				return patients.get(i).getValue();
+			}
+		}
+		
+		return null;
 	}
 
 	/**
@@ -37,12 +64,10 @@ public class LaboratoryAdministrator {
 	 * @param priorityValue
 	 */
 	public boolean assignPriority(String id, int priorityValue) {
-		// TODO - implement LaboratoryAdministrator.assignPriority
 		throw new UnsupportedOperationException();
 	}
 
 	public void sendPatient2Lab() {
-		// TODO - implement LaboratoryAdministrator.sendPatient2Lab
 		throw new UnsupportedOperationException();
 	}
 
@@ -51,37 +76,30 @@ public class LaboratoryAdministrator {
 	 * @param id
 	 */
 	public boolean egressPatient(String id) {
-		// TODO - implement LaboratoryAdministrator.egressPatient
 		throw new UnsupportedOperationException();
 	}
 
 	public void undo() {
-		// TODO - implement LaboratoryAdministrator.undo
 		throw new UnsupportedOperationException();
 	}
 
 	public Hashtable<Integer, Patient> getAllPatients() {
-		// TODO - implement LaboratoryAdministrator.getAllPatients
 		throw new UnsupportedOperationException();
 	}
 
-	public PriorityQueue<Patient> getHematologyPriorityPatients() {
-		// TODO - implement LaboratoryAdministrator.getHematologyPriorityPatients
+	public PriorityQueue<Integer,Patient> getHematologyPriorityPatients() {
 		throw new UnsupportedOperationException();
 	}
 
 	public Queue<Patient> getHematologyNonPriorityPatients() {
-		// TODO - implement LaboratoryAdministrator.getHematologyNonPriorityPatients
 		throw new UnsupportedOperationException();
 	}
 
-	public PriorityQueue<Patient> getGeneralPrioritypatients() {
-		// TODO - implement LaboratoryAdministrator.getGeneralPrioritypatients
+	public PriorityQueue<Integer,Patient> getGeneralPrioritypatients() {
 		throw new UnsupportedOperationException();
 	}
 
 	public Queue<Patient> getGeneralNonPriorityPatients() {
-		// TODO - implement LaboratoryAdministrator.getGeneralNonPriorityPatients
 		throw new UnsupportedOperationException();
 	}
 

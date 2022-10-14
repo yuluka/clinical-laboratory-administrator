@@ -21,10 +21,19 @@ public class Patient {
 	 * @param address
 	 * @param unit
 	 */
-	public Patient(String name, boolean priority, String id, String age, String celNumber, String address, boolean unit) {
-		// TODO - implement Patient.Patient
-		throw new UnsupportedOperationException();
+	public Patient(String name, boolean priority, String id, String age, String celNumber, String address, boolean unit,
+			int priorityValue) {
+		this.name = name;
+		this.priority = priority;
+		this.id = id;
+		this.age = age;
+		this.celNumber = celNumber;
+		this.address = address;
+		this.unit = unit;
+		this.priorityValue = priorityValue;
 	}
+
+
 
 	public String getName() {
 		return this.name;

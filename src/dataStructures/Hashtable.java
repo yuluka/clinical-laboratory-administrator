@@ -70,4 +70,8 @@ public class Hashtable<K,V> {
 	public int size() {
 		return table.size();
 	}
+	
+	public Map<K,V> get(int i) {
+		return table.get(i);
+	}
 }

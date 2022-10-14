@@ -2,9 +2,13 @@ package main;
 
 import java.util.Scanner;
 
+import model.LaboratoryAdministrator;
+
 public class Main {
 
 	private static Scanner in = new Scanner(System.in);
+	
+	private static LaboratoryAdministrator labAdministrator = new LaboratoryAdministrator();
 	
 	public static void main(String[] args) {
 		System.out.println("¡Bienvenido!");
@@ -70,6 +74,70 @@ public class Main {
 	
 	public static void registerPatient() {
 		System.out.println("\n----- Hacer ingreso de paciente -----\n");
+		
+		System.out.println("Ingrese la información del paciente que desea registrar."
+				+ "\nNombre:");
+		String name = in.nextLine();
+		
+		System.out.println("\nNúmero de identificación:");
+		String id = in.nextLine();
+		
+		System.out.println("\nEdad:");
+		String age = in.nextLine();
+		
+		System.out.println("\nNúmero de teléfono:");
+		String celNumber = in.nextLine();
+		
+		System.out.println("\nDirección:");
+		String address = in.nextLine();
+		
+		System.out.println("\n¿Tiene prioridad?"
+				+ "\n1) No."
+				+ "\n2) Sí.");
+		int prioritySelect = Integer.parseInt(in.nextLine());
+		
+		while(prioritySelect > 2 || prioritySelect < 1) {
+			System.out.println("\nSelección inválida. Vuelve a intentar:");
+			prioritySelect = Integer.parseInt(in.nextLine());
+		}
+		
+		System.out.println("\n¿A qué unidad se dirige?"
+				+ "\n1) Propósito general."
+				+ "\n2) Hematología.");
+		int unitSelect = Integer.parseInt(in.nextLine());
+		
+		while(unitSelect > 2 || unitSelect < 1) {
+			System.out.println("\nSelección inválida. Vuelve a intentar:");
+			unitSelect = Integer.parseInt(in.nextLine());
+		}
+		
+		boolean priority = false;
+		if(prioritySelect == 2) {
+			priority = true;
+		}
+		
+		boolean unit = false;
+		if(unitSelect == 2) {
+			unit = true;
+		}
+		
+		int priorityValue = 0;
+		if(priority) {
+			System.out.println("\nIngrese la prioridad que posee la persona "
+					+ "(está ordenado de menor a mayor):"
+					+ "\n1) Discapacidad."
+					+ "\n2) Embarazo."
+					+ "\n3) Adulto mayor.");
+			priorityValue = Integer.parseInt(in.nextLine());
+			
+			while (priorityValue < 1 || priorityValue > 3) {
+				System.out.println("\nSelección inválida. Vuelve a intentar:");
+				
+				priorityValue = Integer.parseInt(in.nextLine());
+			}
+		}
+		
+		labAdministrator.addPatient(name, priority, id, age, celNumber, address, unit, priorityValue);
 		
 		menu();	
 	}
