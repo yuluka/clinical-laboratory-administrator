@@ -174,4 +174,19 @@ class QueueTest {
 		
 		assertTrue(queue.contains(element.getValue()));
 	}
+	
+	@Test
+	void containsTest() {
+		setupStage2();
+		
+		queue.enqueue("A");
+		queue.enqueue("B");
+		queue.enqueue("C");
+		queue.enqueue("D");
+		
+		assertTrue(queue.contains("A"));
+		assertTrue(queue.contains("B"));
+		assertTrue(queue.contains("C"));
+		assertTrue(queue.contains("D"));
+	}
 }

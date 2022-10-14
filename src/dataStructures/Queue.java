@@ -92,6 +92,8 @@ public class Queue<T> {
 			} else if(current.getValue().equals(back.getValue())) {
 				return false;
 			}
+			
+			current = current.getNext();
 		}
 		
 		return false;

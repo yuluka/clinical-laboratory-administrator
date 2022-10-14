@@ -141,6 +141,10 @@ public class PriorityQueue<P extends Comparable<P>,V> {
 	public LinkedList<PriorityElement<P, V>> getList() {
 		return list;
 	}
+	
+	public PriorityElement<P, V> get(int i) {
+		return list.get(i).getValue();
+	}
 
 	public int size() {
 		return list.size();

@@ -24,7 +24,8 @@ public class Main {
 				+ "3) Hacer ingreso de paciente.\n"
 				+ "4) Hacer egreso de paciente.\n"
 				+ "5) Deshacer acción.\n"
-				+ "6) Enviar paciente al laboratorio.\n");
+				+ "6) Enviar paciente al laboratorio.\n"
+				+ "0) Salir.");
 		
 		int selection = Integer.parseInt(in.nextLine());
 		
@@ -53,6 +54,11 @@ public class Main {
 			sendPatientToLab();
 			break;
 			
+		case 0:
+			System.out.println("\n¡Adiós!");
+			System.exit(0);
+			break;
+			
 		default:
 			System.out.println("\nLa opción que elegiste no es válida. Intenta otra vez.");
 			menu();
@@ -63,11 +69,36 @@ public class Main {
 	public static void seePatientsInLab() {
 		System.out.println("\n----- Ver lista de personas en el laboratorio -----\n");
 		
+		System.out.println(labAdministrator.displayAllPatientsInLab());
+		
 		menu();
 	}
 	
 	public static void seeAtentionOrder() {
 		System.out.println("\n----- Ver el orden de atención de las unidades -----\n");
+		System.out.println("¿De qué unidad desea ver el orden de atención?"
+				+ "\n1) Propósito general."
+				+ "\n2) Hematología.");
+		int selection = Integer.parseInt(in.nextLine());
+		
+		switch (selection) {
+		case 1:
+			System.out.println("\nOrden de atención de la unidad de propósito general:"
+					+ "\nFila prioritaria:\n" + labAdministrator.displayGeneralPriorityPatients()
+					+ "\nFila normal:\n" + labAdministrator.displayGeneralNonPriorityPatients());
+			break;
+			
+		case 2:
+			System.out.println("\nOrden de atención de la unidad de hematología:"
+					+ "\nFila prioritaria:\n" + labAdministrator.displayHematologyPriorityPatients()
+					+ "\nFila normal:\n" + labAdministrator.displayHematologyNonPriorityPatients());
+			break;
+
+		default:
+			System.out.println("\nLa opción que elegiste no es válida. Intenta otra vez.");
+			seeAtentionOrder();
+			break;
+		}
 		
 		menu();
 	}
@@ -76,13 +107,18 @@ public class Main {
 		System.out.println("\n----- Hacer ingreso de paciente -----\n");
 		
 		System.out.println("Ingrese la información del paciente que desea registrar."
-				+ "\nNombre:");
+				+ "\nNombre completo:");
 		String name = in.nextLine();
 		
 		System.out.println("\nNúmero de identificación:");
 		String id = in.nextLine();
 		
-		System.out.println("\nEdad:");
+		if(labAdministrator.searchPatient(id) != null) {
+			System.out.println("\nEl paciente que desea registrar ya se encuentra registrado.");
+			menu();
+		}
+		
+		System.out.println("\nEdad (años):");
 		String age = in.nextLine();
 		
 		System.out.println("\nNúmero de teléfono:");

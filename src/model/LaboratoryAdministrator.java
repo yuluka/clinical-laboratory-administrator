@@ -1,16 +1,20 @@
 package model;
 
+import java.util.ArrayList;
+
 import dataStructures.Hashtable;
 import dataStructures.PriorityQueue;
 import dataStructures.Queue;
 
 public class LaboratoryAdministrator {
 
-	Hashtable<Integer,Patient> patients;
-	PriorityQueue<Integer,Patient> generalProrityPatients;
-	Queue<Patient> generalNonPriorityPatients;
-	PriorityQueue<Integer, Patient> hematologyPriorityPatients;
-	Queue<Patient> hematologyNonPriorityPatients;
+	private Hashtable<Integer,Patient> patients;
+	private PriorityQueue<Integer,Patient> generalProrityPatients;
+	private Queue<Patient> generalNonPriorityPatients;
+	private PriorityQueue<Integer, Patient> hematologyPriorityPatients;
+	private Queue<Patient> hematologyNonPriorityPatients;
+	
+	private Laboratory lab;
 
 	public LaboratoryAdministrator() {
 		this.patients = new Hashtable<>();
@@ -18,6 +22,8 @@ public class LaboratoryAdministrator {
 		this.generalNonPriorityPatients = new Queue<>();
 		this.hematologyPriorityPatients = new PriorityQueue<>();
 		this.hematologyNonPriorityPatients = new Queue<>();
+		
+		this.lab = new Laboratory();
 	}
 
 	/**
@@ -40,8 +46,44 @@ public class LaboratoryAdministrator {
 				unit, priorityValue);
 		
 		patients.insert(patients.size()+1, newPatient);
+		sendPatientToQueue(newPatient);
 		
 		return true;
+	}
+	
+	/**
+	 * 
+	 * @param newPatient
+	 */
+	public boolean addPatient(Patient newPatient) {
+		if(searchPatient(newPatient.getId()) != null) {
+			return false;
+		}
+		
+		patients.insert(patients.size()+1, newPatient);
+		sendPatientToQueue(newPatient);
+		
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @param newPatient
+	 */
+	public void sendPatientToQueue(Patient newPatient) {
+		if(newPatient.getPriority()) {
+			if(!newPatient.getUnit()) {
+				generalProrityPatients.insert(newPatient.getPriorityValue(), newPatient);
+			} else {
+				hematologyPriorityPatients.insert(newPatient.getPriorityValue(),newPatient);
+			}
+		} else {
+			if(!newPatient.getUnit()) {
+				generalNonPriorityPatients.enqueue(newPatient);
+			} else {
+				hematologyNonPriorityPatients.enqueue(newPatient);
+			}
+		}
 	}
 
 	/**
@@ -84,23 +126,97 @@ public class LaboratoryAdministrator {
 	}
 
 	public Hashtable<Integer, Patient> getAllPatients() {
-		throw new UnsupportedOperationException();
+		return patients;
+	}
+	
+	public String displayAllPatients() {
+		String info = "";
+		
+		for (int i = 0; i < patients.size(); i++) {
+			info += patients.get(i);
+		}
+		
+		return info;
+	}
+	
+	public ArrayList<Patient> getAllPatientsInLab() {
+		return lab.getPatientsInLab();
+	}
+	
+	public String displayAllPatientsInLab() {
+		String info = "";
+		
+		if(lab.getPatientsInLab().size() == 0) {
+			return "El laboratorio está vacío.";
+		}
+		
+		for (int i = 0; i < lab.getPatientsInLab().size(); i++) {
+			info += lab.getPatientsInLab().get(i).toString();
+		}
+		
+		return info;
 	}
 
 	public PriorityQueue<Integer,Patient> getHematologyPriorityPatients() {
-		throw new UnsupportedOperationException();
+		return hematologyPriorityPatients;
+	}
+	
+	public String displayHematologyPriorityPatients() {
+		return printPriorityQueue(hematologyPriorityPatients);
 	}
 
 	public Queue<Patient> getHematologyNonPriorityPatients() {
-		throw new UnsupportedOperationException();
+		return hematologyNonPriorityPatients;
+	}
+	
+	public String displayHematologyNonPriorityPatients() {
+		return printQueue(hematologyNonPriorityPatients);
 	}
 
-	public PriorityQueue<Integer,Patient> getGeneralPrioritypatients() {
-		throw new UnsupportedOperationException();
+	public PriorityQueue<Integer,Patient> getGeneralPriorityPatients() {
+		return generalProrityPatients;
+	}
+	
+	public String displayGeneralPriorityPatients() {
+		return printPriorityQueue(generalProrityPatients);
 	}
 
 	public Queue<Patient> getGeneralNonPriorityPatients() {
-		throw new UnsupportedOperationException();
+		return generalNonPriorityPatients;
+	}
+	
+	public String displayGeneralNonPriorityPatients() {
+		return printQueue(generalNonPriorityPatients);
+	}
+
+	private String printPriorityQueue(PriorityQueue<Integer, Patient> pQueue) {
+		String info = "";
+		
+		if(pQueue.size() == 0) {
+			return "No hay personas esperando en esta fila.";
+		}
+		
+		for (int i = 0; i < pQueue.size(); i++) {
+			info += pQueue.get(i).getValue().toString();
+		}
+		
+		return info;
+	}
+	
+	private String printQueue(Queue<Patient> queue) {
+		String info = "";
+		
+		Queue<Patient> auxQueue = queue;
+		
+		if(queue.size() == 0) {
+			return "No hay personas esperando en esta fila.";
+		}
+		
+		for (int i = 0; i < queue.size(); i++) {
+			info += auxQueue.dequeue().getValue().toString();
+		}
+		
+		return info;
 	}
 
 }

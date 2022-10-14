@@ -4,11 +4,13 @@ public class Patient {
 
 	private String name;
 	private boolean priority;
+	private String priorityStr;
 	private String id;
 	private String age;
 	private String celNumber;
 	private String address;
 	private boolean unit;
+	private String unitStr;
 	private int priorityValue;
 
 	/**
@@ -31,10 +33,11 @@ public class Patient {
 		this.address = address;
 		this.unit = unit;
 		this.priorityValue = priorityValue;
+		
+		setUnitStr();
+		setPriorityStr();
 	}
-
-
-
+	
 	public String getName() {
 		return this.name;
 	}
@@ -130,5 +133,43 @@ public class Patient {
 	public void setPriorityValue(int priorityValue) {
 		this.priorityValue = priorityValue;
 	}
+	
+	public String getPriorityStr() {
+		return priorityStr;
+	}
 
+	public void setPriorityStr() {
+		if(priority) {
+			this.priorityStr = "Sí";
+		} else {
+			this.priorityStr = "No";
+		}
+	}
+
+	public String getUnitStr() {
+		return unitStr;
+	}
+
+	public void setUnitStr() {
+		if(unit) {
+			this.unitStr = "Hematología";
+		} else {
+			this.unitStr = "Propósito general";
+		}		
+	}
+
+	@Override
+	public String toString() {
+		return "\n***"
+				+ "\nNombre: " + name + ""
+				+ "\nPrioridad: " + priorityStr
+				+ "\nNúmero de identificación: " + id 
+				+ "\nEdad: " + age 
+				+ "\nNúmero de teléfono: " + celNumber 
+				+ "\nDirección: " + address 
+				+ "\nUnidad de destino: " + unitStr 
+				+ "\nValor de prioridad: " + priorityValue
+				+ "\n***";
+	}
+	
 }
