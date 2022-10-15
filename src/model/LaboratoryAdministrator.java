@@ -15,7 +15,7 @@ public class LaboratoryAdministrator {
 	private final String SEPARATOR = ",";
 	
 	private Hashtable<Integer,Patient> patients;
-	private PriorityQueue<Integer,Patient> generalProrityPatients;
+	private PriorityQueue<Integer,Patient> generalPriorityPatients;
 	private Queue<Patient> generalNonPriorityPatients;
 	private PriorityQueue<Integer, Patient> hematologyPriorityPatients;
 	private Queue<Patient> hematologyNonPriorityPatients;
@@ -24,7 +24,7 @@ public class LaboratoryAdministrator {
 
 	public LaboratoryAdministrator() {
 		this.patients = new Hashtable<>();
-		this.generalProrityPatients = new PriorityQueue<>();
+		this.generalPriorityPatients = new PriorityQueue<>();
 		this.generalNonPriorityPatients = new Queue<>();
 		this.hematologyPriorityPatients = new PriorityQueue<>();
 		this.hematologyNonPriorityPatients = new Queue<>();
@@ -79,7 +79,7 @@ public class LaboratoryAdministrator {
 	public void sendPatientToQueue(Patient newPatient) {
 		if(newPatient.getPriority()) {
 			if(!newPatient.getUnit()) {
-				generalProrityPatients.insert(newPatient.getPriorityValue(), newPatient);
+				generalPriorityPatients.insert(newPatient.getPriorityValue(), newPatient);
 			} else {
 				hematologyPriorityPatients.insert(newPatient.getPriorityValue(),newPatient);
 			}
@@ -114,9 +114,27 @@ public class LaboratoryAdministrator {
 	public boolean assignPriority(String id, int priorityValue) {
 		throw new UnsupportedOperationException();
 	}
-
-	public void sendPatient2Lab() {
-		throw new UnsupportedOperationException();
+	
+	/**
+	 * 
+	 * @param unit
+	 */
+	public void sendPatient2Lab(boolean unit) {
+		if(!unit) {
+			if(generalPriorityPatients.size() != 0) {
+				//Enviar paciente prioritario
+				lab.enterPatient(generalPriorityPatients.extractMax().getValue());
+			} else {
+				//Enviar paciente no prioritaio
+				lab.enterPatient(generalNonPriorityPatients.dequeue().getValue());
+			}
+		} else {
+			if(hematologyPriorityPatients.size() != 0) {
+				lab.enterPatient(hematologyPriorityPatients.extractMax().getValue());
+			} else {
+				lab.enterPatient(hematologyNonPriorityPatients.dequeue().getValue());
+			}
+		}
 	}
 
 	/**
@@ -180,11 +198,11 @@ public class LaboratoryAdministrator {
 	}
 
 	public PriorityQueue<Integer,Patient> getGeneralPriorityPatients() {
-		return generalProrityPatients;
+		return generalPriorityPatients;
 	}
 	
 	public String displayGeneralPriorityPatients() {
-		return printPriorityQueue(generalProrityPatients);
+		return printPriorityQueue(generalPriorityPatients);
 	}
 
 	public Queue<Patient> getGeneralNonPriorityPatients() {

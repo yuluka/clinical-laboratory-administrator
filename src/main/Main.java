@@ -175,7 +175,12 @@ public class Main {
 			}
 		}
 		
-		labAdministrator.addPatient(name, priority, id, age, celNumber, address, unit, priorityValue);
+		if(labAdministrator.addPatient(name, priority, id, age, celNumber, address, unit, 
+				priorityValue)) {
+			System.out.println("\n¡Paciente ingresado exitosamente!");
+		} else {
+			System.out.println("\nOcurrió un error en el ingreso del paciente.");
+		}
 		
 		menu();	
 	}
@@ -194,6 +199,26 @@ public class Main {
 	
 	public static void sendPatientToLab() {
 		System.out.println("\n----- Enviar paciente al laboratorio -----\n");
+		
+		System.out.println("¿A qué unidad desea enviar el paciente?"
+				+ "\n1) Propósito general."
+				+ "\n2) Hematología.");
+		int selection = Integer.parseInt(in.nextLine());
+		
+		switch (selection) {
+		case 1:
+			labAdministrator.sendPatient2Lab(false);
+			break;
+			
+		case 2:
+			labAdministrator.sendPatient2Lab(true);
+			break;
+
+		default:
+			System.out.println("\nLa opción que elegiste no es válida. Intenta otra vez.");
+			sendPatientToLab();
+			break;
+		}
 		
 		menu();	
 	}

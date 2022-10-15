@@ -33,6 +33,12 @@ class LaboratoryAdministratorTest {
 				"", false, 1);*/
 	}
 	
+	public void setupStage4() {
+		labAdministrator = new LaboratoryAdministrator();
+		
+		labAdministrator.loadData();
+	}
+	
 	//Tests
 	@Test
 	void nullTest() {
@@ -241,5 +247,14 @@ class LaboratoryAdministratorTest {
 				contains(labAdministrator.searchPatient("1390281361")));
 		assertTrue(labAdministrator.getGeneralNonPriorityPatients().
 				contains(labAdministrator.searchPatient("1007281365")));
+	}
+	
+	@Test
+	void sendPatient2LabTest() {
+		setupStage4();
+		
+		labAdministrator.sendPatient2Lab(false);
+		
+		assertEquals(4,labAdministrator.getGeneralPriorityPatients().size());
 	}
 }
