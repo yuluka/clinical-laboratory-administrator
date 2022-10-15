@@ -1,5 +1,9 @@
 package model;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import dataStructures.Hashtable;
@@ -8,6 +12,8 @@ import dataStructures.Queue;
 
 public class LaboratoryAdministrator {
 
+	private final String SEPARATOR = ",";
+	
 	private Hashtable<Integer,Patient> patients;
 	private PriorityQueue<Integer,Patient> generalProrityPatients;
 	private Queue<Patient> generalNonPriorityPatients;
@@ -206,17 +212,53 @@ public class LaboratoryAdministrator {
 	private String printQueue(Queue<Patient> queue) {
 		String info = "";
 		
-		Queue<Patient> auxQueue = queue;
+		int size = queue.size();
 		
-		if(queue.size() == 0) {
+		if(size == 0) {
 			return "No hay personas esperando en esta fila.";
 		}
 		
-		for (int i = 0; i < queue.size(); i++) {
-			info += auxQueue.dequeue().getValue().toString();
+		for (int i = 0; i < size; i++) {
+			Patient auxPatient = queue.front().getValue();
+			info += queue.dequeue().getValue().toString();
+			
+			queue.enqueue(auxPatient);
 		}
 		
 		return info;
+	}
+	
+	public void loadData() {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("data/DataBase.txt"));
+			
+			String line = br.readLine();
+			
+			while(line != null) {
+				String[] parts = line.split(SEPARATOR);
+				
+				boolean priority = Boolean.parseBoolean(parts[1]);
+				boolean unit = Boolean.parseBoolean(parts[6]);
+				int priorityValue = Integer.parseInt(parts[7]);
+				
+				Patient newPatient = new Patient(parts[0],priority,parts[2],parts[3],
+						parts[4],parts[5],unit,priorityValue);
+				
+				addPatient(newPatient);
+				
+				line = br.readLine();
+			}
+			
+			br.close();
+		
+			System.out.println("\n¡Pacientes cargados exitosamente!");
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 }

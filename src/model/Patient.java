@@ -169,7 +169,7 @@ public class Patient {
 				+ "\nDirección: " + address 
 				+ "\nUnidad de destino: " + unitStr 
 				+ "\nValor de prioridad: " + priorityValue
-				+ "\n***";
+				+ "\n***\n";
 	}
 	
 }
