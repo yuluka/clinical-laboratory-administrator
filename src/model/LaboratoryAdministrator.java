@@ -156,8 +156,12 @@ public class LaboratoryAdministrator {
 	public String displayAllPatients() {
 		String info = "";
 		
+		if(patients.size() == 0) {
+			return "No hay pacientes en el sistema.";
+		}
+		
 		for (int i = 0; i < patients.size(); i++) {
-			info += patients.get(i);
+			info += patients.get(i).getValue().toString();
 		}
 		
 		return info;

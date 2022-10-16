@@ -25,8 +25,10 @@ public class Main {
 				+ "2) Ver el orden de atención de las unidades.\n"
 				+ "3) Hacer ingreso de paciente.\n"
 				+ "4) Hacer egreso de paciente.\n"
-				+ "5) Deshacer acción.\n"
+				+ "5) Ver todos los pacientes en el sistema.\n"
 				+ "6) Enviar paciente al laboratorio.\n"
+				+ "7) Buscar paciente.\n"
+				+ "8) Deshacer acción.\n"
 				+ "0) Salir.");
 		
 		int selection = Integer.parseInt(in.nextLine());
@@ -49,11 +51,19 @@ public class Main {
 			break;
 
 		case 5:
-			undoAction();
+			seeAllPatients();
 			break;
 
 		case 6:
 			sendPatientToLab();
+			break;
+			
+		case 7:
+			searchPatient();
+			break;
+			
+		case 8:
+			undoAction();
 			break;
 			
 		case 0:
@@ -197,6 +207,14 @@ public class Main {
 		menu();	
 	}
 	
+	public static void seeAllPatients() {
+		System.out.println("\n----- Ver todos los pacientes en el sistema -----\n");
+		System.out.println("Los pacientes en el sistema son: "
+				+ "\n" + labAdministrator.displayAllPatients());
+		
+		menu();
+	}
+	
 	public static void sendPatientToLab() {
 		System.out.println("\n----- Enviar paciente al laboratorio -----\n");
 		
@@ -221,5 +239,21 @@ public class Main {
 		}
 		
 		menu();	
+	}
+	
+	public static void searchPatient() {
+		System.out.println("\n----- Buscar paciente -----\n");
+		
+		System.out.println("Digite el número de identificación del paciente que busca:");
+		String id = in.nextLine();
+		
+		if(labAdministrator.searchPatient(id) != null) {
+			System.out.println("\nUsuario encontrado:"
+					+ labAdministrator.searchPatient(id).toString());
+		} else {
+			System.out.println("\nEl usuario que busca no se encuntra en el sistema.");
+		}
+		
+		menu();
 	}
 }

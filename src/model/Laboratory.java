@@ -2,36 +2,48 @@ package model;
 
 import java.util.ArrayList;
 
-import dataStructures.Queue;
-
 public class Laboratory {
 
 	private ArrayList<Patient> patientsInLab;
-	private Queue<Patient> generalPatients;
-	private Queue<Patient> hematologyPatients;
+	private ArrayList<Patient> generalPatients;
+	private ArrayList<Patient> hematologyPatients;
 	
 	public Laboratory() {
 		this.patientsInLab = new ArrayList<>();
-		this.generalPatients = new Queue<>();
-		this.hematologyPatients = new Queue<>();
+		this.generalPatients = new ArrayList<>();
+		this.hematologyPatients = new ArrayList<>();
 	}
 	
 	public void enterPatient(Patient patient) {
 		patientsInLab.add(patient);
 		
 		if(!patient.getUnit()) {
-			generalPatients.enqueue(patient);
+			generalPatients.add(patient);
 		} else {
-			hematologyPatients.enqueue(patient);
+			hematologyPatients.add(patient);
 		}
+		
+		patient.startTimeInLab(this);
 	}
 	
-	public void removeGeneralPatient() {
-		generalPatients.dequeue();
+	public void removePatient(Patient patient) {
+		if(!patient.getUnit()) {
+			removeGeneralPatient(patient);
+		} else {
+			removeHematologyPatient(patient);
+		}
+		
+		patientsInLab.remove(patient);
+		
+		System.out.println("Se ha eliminado a: " + patient.getName());
 	}
 	
-	public void removeHematologyPatient() {
-		hematologyPatients.dequeue();
+	public void removeGeneralPatient(Patient patient) {
+		generalPatients.remove(patient);
+	}
+	
+	public void removeHematologyPatient(Patient patient) {
+		hematologyPatients.remove(patient);
 	}
 
 	public int getTotalPatient() {
@@ -46,19 +58,19 @@ public class Laboratory {
 		this.patientsInLab = patientsInLab;
 	}
 
-	public Queue<Patient> getGeneralPatients() {
+	public ArrayList<Patient> getGeneralPatients() {
 		return generalPatients;
 	}
 
-	public void setGeneralPatients(Queue<Patient> generalPatients) {
+	public void setGeneralPatients(ArrayList<Patient> generalPatients) {
 		this.generalPatients = generalPatients;
 	}
 
-	public Queue<Patient> getHematologyPatients() {
+	public ArrayList<Patient> getHematologyPatients() {
 		return hematologyPatients;
 	}
 
-	public void setHematologyPatients(Queue<Patient> hematologyPatients) {
+	public void setHematologyPatients(ArrayList<Patient> hematologyPatients) {
 		this.hematologyPatients = hematologyPatients;
 	}
 }

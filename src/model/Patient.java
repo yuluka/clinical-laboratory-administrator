@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Random;
+
 public class Patient {
 
 	private String name;
@@ -156,6 +158,29 @@ public class Patient {
 		} else {
 			this.unitStr = "Propósito general";
 		}		
+	}
+	
+	public void startTimeInLab(Laboratory lab) {
+		new Thread(() -> {
+			int minimunTimeInLab = 60;
+			int maximunTimeInLab = 120;
+			
+			Random random = new Random();
+			int timeInLab = random.nextInt(maximunTimeInLab) + minimunTimeInLab;
+			
+			System.out.println(timeInLab);
+			
+			for(int i = 0; i < timeInLab; i++) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			lab.removePatient(this);
+			
+		}).start();
 	}
 
 	@Override
