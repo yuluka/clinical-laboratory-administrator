@@ -197,6 +197,17 @@ public class Main {
 	
 	public static void egressPatient() {
 		System.out.println("\n----- Hacer egreso de paciente -----\n");
+
+		System.out.println("Ingrese el ID del paciente que desea egresar:");
+		String id = in.nextLine();
+		
+		if(labAdministrator.egressPatient(id)) {
+			System.out.println("\n¡El paciente ha sido egresado de manera "
+					+ "correcta!");
+		} else {
+			System.out.println("\nHa habido un error en el egreso del paciente o "
+					+ "el ID ingresado no se encuentra registrado en el sistema.");
+		}
 		
 		menu();	
 	}
@@ -250,6 +261,11 @@ public class Main {
 		if(labAdministrator.searchPatient(id) != null) {
 			System.out.println("\nUsuario encontrado:"
 					+ labAdministrator.searchPatient(id).toString());
+			
+			if(!labAdministrator.isInQueues(id)) {
+				System.out.println("El usaurio ya ha sido atentidido y debe ser egresado del "
+						+ "sistema manualmente.");
+			}
 		} else {
 			System.out.println("\nEl usuario que busca no se encuntra en el sistema.");
 		}

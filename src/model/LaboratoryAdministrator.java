@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import dataStructures.Hashtable;
+import dataStructures.Map;
 import dataStructures.PriorityQueue;
 import dataStructures.Queue;
 
@@ -14,7 +15,7 @@ public class LaboratoryAdministrator {
 
 	private final String SEPARATOR = ",";
 	
-	private Hashtable<Integer,Patient> patients;
+	private Hashtable<String,Patient> patients;
 	private PriorityQueue<Integer,Patient> generalPriorityPatients;
 	private Queue<Patient> generalNonPriorityPatients;
 	private PriorityQueue<Integer, Patient> hematologyPriorityPatients;
@@ -55,7 +56,7 @@ public class LaboratoryAdministrator {
 		Patient newPatient = new Patient(name, priority, id, age, celNumber, address, 
 				unit, priorityValue);
 		
-		patients.insert(patients.size()+1, newPatient);
+		patients.insert(newPatient.getId(), newPatient);
 		sendPatientToQueue(newPatient);
 		
 		return true;
@@ -70,7 +71,7 @@ public class LaboratoryAdministrator {
 			return false;
 		}
 		
-		patients.insert(patients.size()+1, newPatient);
+		patients.insert(newPatient.getId(), newPatient);
 		sendPatientToQueue(newPatient);
 		
 		return true;
@@ -140,20 +141,137 @@ public class LaboratoryAdministrator {
 			}
 		}
 	}
+	
+	
 
 	/**
+	 * Deletes a patients from the list with all the patients in the system.
 	 * 
-	 * @param id
+	 * @param id the of the patient to delete.
 	 */
 	public boolean egressPatient(String id) {
-		throw new UnsupportedOperationException();
+		Patient patient = searchPatient(id);
+		
+		if(patient == null) {
+			return false;
+		}
+	
+		egressOfQueues(patient);
+		
+		patients.delete(new Map<String, Patient>(id, patient));
+		
+		if(isInQueues(patient)) {
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public void egressOfQueues(Patient patient) {
+		if(generalNonPriorityPatients.contains(patient)) {
+			egressPatientOfQueue(patient,generalNonPriorityPatients);
+			
+			return;
+		} else if(generalPriorityPatients.contains(patient)) {
+			egressPatientOfPriorityQueue(patient, generalPriorityPatients);
+			
+			return;
+		} else if(hematologyNonPriorityPatients.contains(patient)) {
+			egressPatientOfQueue(patient, hematologyNonPriorityPatients);
+			
+			return;
+		} else if(hematologyPriorityPatients.contains(patient)) {
+			egressPatientOfPriorityQueue(patient, hematologyPriorityPatients);
+			
+			return;
+		}
+	}
+	
+	/**
+	 * Removes the specified patient of the specified queue.
+	 * 
+	 * @param patient the patient to remove.
+	 * @param queue the queue in which the patient is.
+	 * @return the boolean value of the operation's result.
+	 */
+	private boolean egressPatientOfQueue(Patient patient, 
+			Queue<Patient> queue) {
+		int size = queue.size();
+		boolean result = false;
+		
+		for (int i = 0; i < size-1; i++) {
+			if(queue.front().getValue().getId().equalsIgnoreCase(patient.getId())) {
+				queue.dequeue();
+				
+				result = true;
+			}
+			
+			Patient auxPatient = queue.dequeue().getValue();
+			queue.enqueue(auxPatient);
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * Removes the specified patient of the specified priority queue.
+	 * 
+	 * @param patient the patient to remove.
+	 * @param pQueue the priority queue in which the patient is.
+	 * @return the boolean value of the operation's result.
+	 */
+	private boolean egressPatientOfPriorityQueue(Patient patient, 
+			PriorityQueue<Integer, Patient> pQueue) {
+		Queue<Patient> auxQueue = new Queue<Patient>();
+		
+		while (pQueue.size() != 0) {
+			if(pQueue.maximum().getValue().getId().equalsIgnoreCase(patient.getId())) {
+				pQueue.extractMax();
+			} else {
+				auxQueue.enqueue(pQueue.extractMax().getValue());
+			}
+		}
+		
+		int size = auxQueue.size();
+		
+		for (int i = 0; i < size; i++) {
+			pQueue.insert(auxQueue.front().getValue().getPriorityValue(), 
+					auxQueue.dequeue().getValue());
+		}
+		
+		return false;
+	}
+	
+
+	/**
+	 * Says if the specified patient is in any queue.
+	 * 
+	 * @param patient the patient to search in the queues.
+	 * @return the boolean value of whether the patient is in any queue or 
+	 * not.
+	 */	
+	public boolean isInQueues(Patient patient) {
+		if(generalNonPriorityPatients.contains(patient) || generalPriorityPatients.contains(patient)
+				|| hematologyNonPriorityPatients.contains(patient) || hematologyPriorityPatients.contains(patient)) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean isInQueues(String id) {
+		if(searchPatient(id) != null) {
+			return isInQueues(searchPatient(id));
+		}
+		
+		return false;
 	}
 
 	public void undo() {
 		throw new UnsupportedOperationException();
 	}
 
-	public Hashtable<Integer, Patient> getAllPatients() {
+	public Hashtable<String, Patient> getAllPatients() {
 		return patients;
 	}
 	
@@ -166,6 +284,11 @@ public class LaboratoryAdministrator {
 		
 		for (int i = 0; i < patients.size(); i++) {
 			info += patients.get(i).getValue().toString();
+			
+			if(!isInQueues(patients.get(i).getValue())) {
+				info += "(Este usuario ya ha sido atentidido y debe ser egresado del "
+						+ "sistema manualmente)";
+			}
 		}
 		
 		return info;

@@ -54,7 +54,9 @@ public class Laboratory {
 		
 		patientsInLab.remove(patient);
 		
-		System.out.println("Se ha eliminado a: " + patient.getName());
+		System.out.println("Se ha eliminado a: " + patient.getName()
+				+ "\nIdentificado con: " + patient.getId() 
+				+ "\n(Recuerde hacer el egreso manual)");
 	}
 	
 	/**
