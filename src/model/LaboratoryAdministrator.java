@@ -22,6 +22,9 @@ public class LaboratoryAdministrator {
 	
 	private Laboratory lab;
 
+	/**
+	 * Constructs a laboratory administrator.
+	 */
 	public LaboratoryAdministrator() {
 		this.patients = new Hashtable<>();
 		this.generalPriorityPatients = new PriorityQueue<>();
@@ -33,6 +36,7 @@ public class LaboratoryAdministrator {
 	}
 
 	/**
+	 * Adds 
 	 * 
 	 * @param name
 	 * @param priority
