@@ -1,6 +1,6 @@
 package dataStructures;
 
-public class SimpleLinkedList<T> {
+public class SimpleLinkedList<T> implements Cloneable {
 	
 	private SimpleNode<T> head;
 	private int size;
@@ -67,5 +67,20 @@ public class SimpleLinkedList<T> {
 		
 		return printList(current.getNext(), info+current.getValue());
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public SimpleLinkedList<T> clone() {
+		try {
+			SimpleLinkedList<T> aux = (SimpleLinkedList<T>) super.clone();
+			aux.head = head.clone();
+			
+			return aux;
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			
+			return null;
+		}
+	}	
 	
 }

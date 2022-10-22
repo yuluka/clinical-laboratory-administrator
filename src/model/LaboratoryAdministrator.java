@@ -10,8 +10,9 @@ import dataStructures.Hashtable;
 import dataStructures.Map;
 import dataStructures.PriorityQueue;
 import dataStructures.Queue;
+import dataStructures.Stack;
 
-public class LaboratoryAdministrator {
+public class LaboratoryAdministrator implements Cloneable {
 
 	private final String SEPARATOR = ",";
 	
@@ -20,6 +21,8 @@ public class LaboratoryAdministrator {
 	private Queue<Patient> generalNonPriorityPatients;
 	private PriorityQueue<Integer, Patient> hematologyPriorityPatients;
 	private Queue<Patient> hematologyNonPriorityPatients;
+	
+	public static Stack<LaboratoryAdministrator> actions = new Stack<>();
 	
 	private Laboratory lab;
 
@@ -267,10 +270,6 @@ public class LaboratoryAdministrator {
 		return false;
 	}
 
-	public void undo() {
-		throw new UnsupportedOperationException();
-	}
-
 	public Hashtable<String, Patient> getAllPatients() {
 		return patients;
 	}
@@ -409,5 +408,48 @@ public class LaboratoryAdministrator {
 		}
 		
 	}
+	
+	public void saveAction(LaboratoryAdministrator toSave) {
+		LaboratoryAdministrator aux = (LaboratoryAdministrator) clone();
+		actions.push(aux);
+	}
 
+	@Override
+	public Object clone() {
+		try {
+			LaboratoryAdministrator aux = (LaboratoryAdministrator) super.clone();
+			aux.patients = patients.clone();
+			
+			return aux;
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			
+			return null;
+		}
+	}
+	
+	public void undo() {
+		new Thread(() -> {
+			LaboratoryAdministrator auxLab = actions.pop().getValue();
+			
+			Hashtable<String, Patient> auxTable = auxLab.patients;
+			
+			generalNonPriorityPatients = new Queue<>();
+			generalPriorityPatients = new PriorityQueue<>();
+			hematologyNonPriorityPatients = new Queue<>();
+			hematologyPriorityPatients = new PriorityQueue<>();
+			
+			for (int i = auxTable.size()-1; i >= 0; i--) {
+				sendPatientToQueue(auxTable.get(i).getValue());
+			}
+			
+			patients = auxTable;
+		}).start();
+	}
+	
+	public void clearActions() {
+		while (!actions.isEmpty()) {
+			actions.pop();
+		}
+	}
 }

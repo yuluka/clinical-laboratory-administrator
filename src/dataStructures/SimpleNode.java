@@ -1,6 +1,6 @@
 package dataStructures;
 
-public class SimpleNode<T> {
+public class SimpleNode<T> implements Cloneable {
 	
 	private T value;
 	private SimpleNode<T> next;
@@ -23,5 +23,23 @@ public class SimpleNode<T> {
 
 	public void setNext(SimpleNode<T> next) {
 		this.next = next;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public SimpleNode<T> clone() {
+		try {
+			SimpleNode<T> aux = (SimpleNode<T>) super.clone();
+			
+			if(aux.next != null) {
+				aux.next = next.clone();
+			}
+			
+			return aux;
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			
+			return null;
+		}
 	}
 }

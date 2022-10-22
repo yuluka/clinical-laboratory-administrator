@@ -1,6 +1,6 @@
 package dataStructures;
 
-public class Hashtable<K,V> {
+public class Hashtable<K,V> implements Cloneable {
 
 	//Uses an object Map to make easier the implementation of the couples of key and value.
 	private SimpleLinkedList<Map<K,V>> table;
@@ -73,5 +73,20 @@ public class Hashtable<K,V> {
 	
 	public Map<K,V> get(int i) {
 		return table.get(i);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Hashtable<K, V> clone() {
+		try {
+			Hashtable<K, V> aux = (Hashtable<K, V>) super.clone();
+			aux.table = table.clone();
+			
+			return aux;
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			
+			return null;
+		}
 	}
 }

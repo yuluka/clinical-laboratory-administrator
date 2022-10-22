@@ -43,10 +43,12 @@ public class Main {
 			break;
 
 		case 3:
+			saveAction();
 			registerPatient();
 			break;
 
 		case 4:
+			saveAction();
 			egressPatient();
 			break;
 
@@ -127,6 +129,9 @@ public class Main {
 		
 		if(labAdministrator.searchPatient(id) != null) {
 			System.out.println("\nEl paciente que desea registrar ya se encuentra registrado.");
+
+			labAdministrator.clearActions();
+			
 			menu();
 		}
 		
@@ -207,13 +212,26 @@ public class Main {
 		} else {
 			System.out.println("\nHa habido un error en el egreso del paciente o "
 					+ "el ID ingresado no se encuentra registrado en el sistema.");
+			
+			labAdministrator.clearActions();
 		}
 		
 		menu();	
 	}
 	
+	public static void saveAction() {
+		labAdministrator.saveAction(labAdministrator);
+		System.out.println(labAdministrator.getAllPatients().size());
+	}
+	
 	public static void undoAction() {
-		System.out.println("\n----- Deshacer acción -----\n");
+		if(LaboratoryAdministrator.actions.isEmpty()) {
+			System.out.println("\n(No hay acciones por deshacer)");
+		} else {
+			labAdministrator.undo();
+			
+			System.out.println("\n(Acción deshecha)");
+		}
 		
 		menu();	
 	}
@@ -267,7 +285,7 @@ public class Main {
 						+ "sistema manualmente.");
 			}
 		} else {
-			System.out.println("\nEl usuario que busca no se encuntra en el sistema.");
+			System.out.println("\nEl usuario que busca no se encuentra en el sistema.");
 		}
 		
 		menu();
