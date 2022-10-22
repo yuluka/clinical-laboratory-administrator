@@ -243,8 +243,6 @@ public class Patient {
 			Random random = new Random();
 			int timeInLab = random.nextInt(maximunTimeInLab) + minimunTimeInLab;
 			
-			System.out.println(timeInLab);
-			
 			for(int i = 0; i < timeInLab; i++) {
 				try {
 					Thread.sleep(1000);

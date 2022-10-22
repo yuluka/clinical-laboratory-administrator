@@ -1,8 +1,10 @@
 package model;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -377,36 +379,63 @@ public class LaboratoryAdministrator implements Cloneable {
 	}
 	
 	public void loadData() {
-		try {
-			BufferedReader br = new BufferedReader(new FileReader("data/DataBase.txt"));
+		new Thread(() -> {
+			try {
+				BufferedReader br = new BufferedReader(new FileReader("data/DataBase.txt"));
+				
+				String line = br.readLine();
+				
+				while(line != null) {
+					String[] parts = line.split(SEPARATOR);
+					
+					boolean priority = Boolean.parseBoolean(parts[1]);
+					boolean unit = Boolean.parseBoolean(parts[6]);
+					int priorityValue = Integer.parseInt(parts[7]);
+					
+					Patient newPatient = new Patient(parts[0],priority,parts[2],parts[3],
+							parts[4],parts[5],unit,priorityValue);
+					
+					addPatient(newPatient);
+					
+					line = br.readLine();
+				}
+				
+				br.close();
 			
-			String line = br.readLine();
-			
-			while(line != null) {
-				String[] parts = line.split(SEPARATOR);
+				System.out.println("\n¡Pacientes cargados exitosamente!");
 				
-				boolean priority = Boolean.parseBoolean(parts[1]);
-				boolean unit = Boolean.parseBoolean(parts[6]);
-				int priorityValue = Integer.parseInt(parts[7]);
-				
-				Patient newPatient = new Patient(parts[0],priority,parts[2],parts[3],
-						parts[4],parts[5],unit,priorityValue);
-				
-				addPatient(newPatient);
-				
-				line = br.readLine();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 			
-			br.close();
-		
-			System.out.println("\n¡Pacientes cargados exitosamente!");
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		}).start();
+	}
+	
+	public void saveData() {
+		new Thread(() -> {
+			try {
+				BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("data/DataBase.txt"));
+				
+				for (int i = patients.size()-1; i >= 0; i--) {
+					bufferedWriter.write(patients.get(i).getValue().getName() + SEPARATOR +
+							patients.get(i).getValue().getPriority() + SEPARATOR +
+							patients.get(i).getValue().getId() + SEPARATOR +
+							patients.get(i).getValue().getAge() + SEPARATOR +
+							patients.get(i).getValue().getCelNumber() + SEPARATOR +
+							patients.get(i).getValue().getAddress() + SEPARATOR +
+							patients.get(i).getValue().getUnit() + SEPARATOR +
+							patients.get(i).getValue().getPriorityValue() + "\n");
+				}
+				
+				//System.out.println("\n¡Los archivos han sido guardados exitosamente!");
+				
+				bufferedWriter.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}).start();
 	}
 	
 	public void saveAction(LaboratoryAdministrator toSave) {

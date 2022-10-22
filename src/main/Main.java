@@ -193,6 +193,8 @@ public class Main {
 		if(labAdministrator.addPatient(name, priority, id, age, celNumber, address, unit, 
 				priorityValue)) {
 			System.out.println("\n¡Paciente ingresado exitosamente!");
+			
+			labAdministrator.saveData();
 		} else {
 			System.out.println("\nOcurrió un error en el ingreso del paciente.");
 		}
@@ -209,6 +211,8 @@ public class Main {
 		if(labAdministrator.egressPatient(id)) {
 			System.out.println("\n¡El paciente ha sido egresado de manera "
 					+ "correcta!");
+			
+			labAdministrator.saveData();
 		} else {
 			System.out.println("\nHa habido un error en el egreso del paciente o "
 					+ "el ID ingresado no se encuentra registrado en el sistema.");
@@ -220,8 +224,11 @@ public class Main {
 	}
 	
 	public static void saveAction() {
-		labAdministrator.saveAction(labAdministrator);
-		System.out.println(labAdministrator.getAllPatients().size());
+		try {
+			labAdministrator.saveAction(labAdministrator);
+		} catch (NullPointerException e) {
+			//El sistema está vacío
+		}
 	}
 	
 	public static void undoAction() {
@@ -231,6 +238,8 @@ public class Main {
 			labAdministrator.undo();
 			
 			System.out.println("\n(Acción deshecha)");
+			
+			labAdministrator.saveData();
 		}
 		
 		menu();	
@@ -254,10 +263,26 @@ public class Main {
 		
 		switch (selection) {
 		case 1:
+			if(labAdministrator.getGeneralNonPriorityPatients().isEmpty() ||
+					labAdministrator.getGeneralPriorityPatients().size() == 0) {
+				System.out.println("\nNo hay ninguna persona esperando a ser atendido en la "
+						+ "unidad seleccionada.");
+				
+				break;
+			}
+			
 			labAdministrator.sendPatient2Lab(false);
 			break;
-			
+		
 		case 2:
+			if(labAdministrator.displayHematologyNonPriorityPatients().isEmpty() ||
+					labAdministrator.getHematologyPriorityPatients().size() == 0) {
+				System.out.println("\nNo hay ninguna persona esperando a ser atendido en la "
+						+ "unidad seleccionada.");
+				
+				break;
+			}
+			
 			labAdministrator.sendPatient2Lab(true);
 			break;
 
